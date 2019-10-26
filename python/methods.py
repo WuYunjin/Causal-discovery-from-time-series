@@ -87,10 +87,6 @@ def LiNGAM_VAR(data,maxlags=2):
    # Input data is of shape (time, variables)
     T, N = data.shape
 
-    # Standardize data
-    data -= data.mean(axis=0)
-    data /= data.std(axis=0)
-
     # Fit VAR model and get coefficients and p-values
     tsamodel = tsa.var.var_model.VAR(data)
     results = tsamodel.fit(maxlags=maxlags,  trend='nc')
@@ -120,7 +116,7 @@ def LiNGAM_VAR(data,maxlags=2):
     for j in range(N):
         for i in range(N):
 
-            # Store only values at lag with minimum p-value
+            # Store only values at lag with minimum p-value  ???因为系数不一样了，所以p-value也变了，应该需要从新计算？
             tau_min_pval = np.argmin(pvalues[
                                     (np.arange(1, maxlags+1)-1)*N + i , j]) + 1
 
@@ -142,15 +138,15 @@ def LiNGAM_VAR(data,maxlags=2):
     return val_matrix, p_matrix, lag_matrix
 
 
-def linear_VAR(data, maxlags=2, correct_pvalues=True):
+def linear_VAR(data, maxlags=5, correct_pvalues=True):
     # this is VAR model
 
     # Input data is of shape (time, variables)
     T, N = data.shape
 
     # Standardize data
-    data -= data.mean(axis=0)
-    data /= data.std(axis=0)
+    #data -= data.mean(axis=0)
+    #data /= data.std(axis=0)
 
     # Fit VAR model and get coefficients and p-values
     tsamodel = tsa.var.var_model.VAR(data)
@@ -189,7 +185,7 @@ def linear_VAR(data, maxlags=2, correct_pvalues=True):
 #-----------------------------------------------------------------------------------------------------------------
 #the below is for running experiments
 
-def run_experiment(dataname,num_N,num_T,method,parameter_maxlags=2):
+def run_experiment(dataname,num_N,num_T,method,parameter_maxlags=5):
 
     # Setup a python dictionary to store method hash, parameter values, and results
     results = {}
@@ -250,20 +246,12 @@ def run_experiment(dataname,num_N,num_T,method,parameter_maxlags=2):
 
             print("Run {} on {}".format(method_name, name))
             data = np.loadtxt(zip_ref.open(name))
-            ######################
-            import seaborn as sns
-            import pandas as pd
-            import matplotlib.pyplot as plt
-            sns.pairplot(pd.DataFrame(data))
-            plt.show()
-            continue
-            ######################
 
             # Runtimes for your own assessment
             start_time = time.time()
 
             # Run your method (adapt parameters if needed)
-            if(method_name=="linear-VAR"): val_matrix, p_matrix, lag_matrix = linear_VAR(data)
+            if(method_name=="linear-VAR"): val_matrix, p_matrix, lag_matrix = linear_VAR(data,maxlags)
             elif(method_name=="LiNGAM-VAR"): val_matrix, p_matrix, lag_matrix = LiNGAM_VAR(data)
             elif(method_name=="LiNGAM"): val_matrix, p_matrix, lag_matrix = LiNGAM_model(data)
             elif(method_name=="GES"): val_matrix, p_matrix, lag_matrix = GES_model(data)
@@ -279,7 +267,7 @@ def run_experiment(dataname,num_N,num_T,method,parameter_maxlags=2):
             # but not required. Then you can leave the dictionary field empty          
             if p_matrix is not None: pvalues.append(p_matrix.flatten())
             if lag_matrix is not None: lags.append(lag_matrix.flatten())
-
+            
     # Store arrays as lists for json
     results['scores'] = np.array(scores).tolist()
     if len(pvalues) > 0: results['pvalues'] = np.array(pvalues).tolist()
@@ -295,6 +283,7 @@ def run_experiment(dataname,num_N,num_T,method,parameter_maxlags=2):
 
 if __name__ == '__main__':
 
-    for method in ["LiNGAM-VAR"]:
-        for data in ["TestWEATHnoise"]: 
-            run_experiment(data,5,2000,method)
+    for method in ["linear-VAR"]:
+        for data in ["TestCLIMnoise"]: 
+            for lag in range(2,6):
+                run_experiment(data,5,250,method,lag)
