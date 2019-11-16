@@ -2,6 +2,7 @@
 
 There are two python files, my_methods.py and main.py.
 The implementation of my methods for the competition is in the my_methods.py.
+The used parameter values for each experiment are list in the main.py.
 
 For convenience, the total 13 datasets and corresponding top-1 results are already in the experiments and results folder respectively.
 
