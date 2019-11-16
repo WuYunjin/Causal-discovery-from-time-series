@@ -103,6 +103,7 @@ def run_experiment(dataname,args):
 
 if __name__ == '__main__':
 
+    #define a parser and add the name of parameters will be used
     parser = argparse.ArgumentParser()
     parser.add_argument('--method', type=str, help='input the method name, Pruning_VAR or Stacking_VAR.')
     parser.add_argument('--maxlag', type=int, help='the maxlag.')
@@ -116,7 +117,7 @@ if __name__ == '__main__':
     parser.add_argument('--alpha', type=float, default=0.9,help='a constant value for pruning.')
     parser.add_argument('--beta', type=float, default=0.05,help='a constant value for pruning.')
 
-    # set args and run experiments.
+    # set parameters and run experiments, one experiment for one dataset, totally in 13 datasets.
     args = parser.parse_args(['--method','Pruning_VAR','--N','5','--T','1000','--maxlag','9',
                             '--pvalue_threshold','0.01','--score_threshold','0.185','--alpha','0.95','--beta','0.09'])
     run_experiment('FinalWEATH',args)
