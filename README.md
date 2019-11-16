@@ -1,4 +1,11 @@
-# Causal-discovery-from-time-series
-Neurips 2019 Competition:[Causality for Climate (C4C)](https://causeme.uv.es/neurips2019/)
+# Neurips 2019 Competition: Causality for Climate (C4C)
+Details about this Neurips 2019 Competition can be obtained in the website [Causality for Climate (C4C)](https://causeme.uv.es/neurips2019/).
+
+This is the repository for my solutions to the competition. 
+
+To reproduce my competition results, you can just clone this repository and run the main.py under the python folder.
+
+
+
 
 
