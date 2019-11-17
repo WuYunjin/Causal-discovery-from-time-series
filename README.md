@@ -5,7 +5,7 @@ This is the repository for my solutions to the competition.
 
 To reproduce my competition results, you can just clone this repository and run the main.py under the python folder.
 
-More details can be found in the description.md.
+More details can be found in the [description.md](./python/description.md).
 
 
 
